@@ -1,8 +1,8 @@
-# Xいいねビューア
+# Likeback
 
-A self-contained Cloudflare Worker (`mylikes`) with a Japanese frontend, 20 categories, month/category/author filters, search, shuffle, personal PNG cards, and responsive masonry (up to five columns). No build step or additional bindings are required.
+A self-contained Cloudflare Worker (`likeback`) with a Japanese frontend, 20 categories, month/category/author filters, search, shuffle, personal PNG cards, and responsive masonry (up to five columns). No build step or additional bindings are required.
 
-1. Enable OAuth 2.0 for a confidential Web App in the X developer portal. Register `https://<worker-host>/callback` and your Worker origin. Request `tweet.read users.read like.read offline.access` and access to liked tweets.
+1. Enable OAuth 2.0 for a confidential Web App in the X developer portal. Register `https://likeback.kzyxyz16.workers.dev/callback` and the Worker origin `https://likeback.kzyxyz16.workers.dev` (or your deployed origin). OAuth callback URLs are derived from `new URL(request.url).origin`; shared links use the current page origin. Request `tweet.read users.read like.read offline.access` and access to liked tweets.
 2. Run `wrangler kv namespace create SESSIONS`. Replace the existing example namespace `id` in `wrangler.toml` with your own ID. The checked-in ID is an example value, not a usable placeholder or secret.
 3. Configure `X_CLIENT_ID`, `X_CLIENT_SECRET`, and `SESSION_SECRET` using `wrangler secret put <NAME>`. Generate a long random session secret, for example with `openssl rand -hex 32`. Use OAuth 2.0 credentials, not OAuth 1.0 API keys. Keep the existing `SESSIONS` KV and `AI` bindings.
 4. Run `node --check src/worker.js`, preview with `wrangler dev`, then deploy with `wrangler deploy`. OAuth needs HTTPS because cookies are Secure.
