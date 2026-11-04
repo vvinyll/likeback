@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Xいいねビューア</title>
+<style>
+:root{color-scheme:light dark;--bg:#f7f9f9;--card:#fff;--fg:#0f1419;--muted:#536471;--line:#eff3f4;--blue:#1d9bf0}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,-apple-system,sans-serif}header{background:var(--card);border-bottom:1px solid var(--line)}.bar,main{max-width:1160px;margin:auto;padding:20px} .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}h1{font-size:23px;margin:0 auto 0 0}h2{font-size:20px}a{color:var(--blue);text-decoration:none}button,.button,input,select{font:inherit;border-radius:22px;padding:9px 16px;border:1px solid var(--line);background:var(--card);color:var(--fg)}button,.button{cursor:pointer}button:hover,.button:hover{border-color:var(--blue)}.primary{background:var(--blue);color:white;border:0}.identity{display:flex;gap:8px;align-items:center;color:var(--muted)}.identity img{width:32px;height:32px;border-radius:50%}.landing{text-align:center;padding:90px 20px}.landing p,.muted{color:var(--muted)}.controls{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 12px}.controls input{flex:1;min-width:180px}.segments{display:flex}.segments button{border-radius:0}.segments button:first-child{border-radius:22px 0 0 22px}.segments button:last-child{border-radius:0 22px 22px 0}.segments button[aria-pressed=true]{background:var(--blue);color:#fff}.stats{display:flex;gap:24px;color:var(--muted);margin:16px 0}.columns{columns:340px;column-gap:16px}.post{display:inline-block;width:100%;break-inside:avoid;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 16px;cursor:pointer;vertical-align:top}.post:hover{box-shadow:0 2px 12px #53647118}.post:focus-visible{outline:2px solid var(--blue)}.post-head{display:flex;gap:10px;align-items:flex-start}.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--line)}.author{min-width:0}.name{font-weight:700;overflow-wrap:anywhere}.byline{color:var(--muted);font-size:14px;overflow-wrap:anywhere}.text{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}.media{display:grid;gap:2px;border-radius:16px;overflow:hidden;background:var(--line);height:240px;grid-template-columns:1fr}.media.n2,.media.n3,.media.n4{grid-template-columns:1fr 1fr}.media.n3,.media.n4{grid-template-rows:1fr 1fr}.media.n3 .tile:first-child{grid-row:span 2}.tile{position:relative;min-height:0;overflow:hidden}.tile img{width:100%;height:100%;object-fit:cover;display:block}.play{position:absolute;inset:0;display:grid;place-items:center}.play span{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#0f1419b3;color:white;font-size:26px}.footer{display:flex;justify-content:space-between;gap:8px;color:var(--muted);margin-top:14px;font-size:12px}.metric{display:flex;align-items:center;gap:5px}.metric svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}.featured-title{display:flex;justify-content:space-between;align-items:center}.featured{max-width:620px;margin:auto}.status{text-align:center;padding:28px;color:var(--muted)}[hidden]{display:none!important}@media(prefers-color-scheme:dark){:root{--bg:#000;--card:#15202b;--fg:#e7e9ea;--muted:#8b98a5;--line:#2f3336}}@media(max-width:500px){.bar,main{padding:14px}.stats{gap:14px}.controls>*{max-width:100%}}
+</style></head><body><header><div class="bar"><h1>Xいいねビューア</h1><div id="account" class="identity"></div></div></header><main><section id="landing" class="landing" hidden><h2>好きな投稿を、もう一度。</h2><p id="intro">Xのいいねを見やすく並べて楽しもう。</p><a id="login" class="button primary" href="/login">Xでログイン</a></section><div id="status" class="status" role="status" aria-live="polite">読み込み中…</div><section id="app" hidden><div class="featured-title"><h2>今日の一枚</h2><button id="shuffle">シャッフル</button></div><div id="featured" class="featured"></div><div class="controls"><input id="search" type="search" placeholder="投稿を検索" aria-label="投稿を検索"><select id="authors" aria-label="投稿者"><option value="">すべての投稿者</option></select><div class="segments" aria-label="並び順"><button data-sort="liked" aria-pressed="true">いいね順</button><button data-sort="new" aria-pressed="false">新しい順</button><button data-sort="popular" aria-pressed="false">人気順</button></div></div><div id="stats" class="stats"></div><div id="posts" class="columns"></div></section></main>
+<script>
+'use strict';
+window.__MOCK__ = {"user": {"id": "1", "name": "旅するあお", "username": "ao_travel", "profile_image_url": "https://picsum.photos/seed/avatar1/600/400"}, "posts": [{"id": "2000000000000000000", "text": "秋の光を探しに。今日の空はとてもきれい。\n#写真 #散歩 https://example.com", "created_at": "2026-10-31T09:00:00Z", "metrics": {"reply": 0, "repost": 0, "like": 959, "view": 1500}, "author": {"name": "旅するあお", "username": "ao_travel", "avatar": "https://picsum.photos/seed/avatar1/600/400"}, "media": [{"type": "photo", "url": "https://picsum.photos/seed/1/600/400"}]}, {"id": "2000000000000000001", "text": "週末の小旅行。海と山、どちらも好き。\n@ao_travel と一緒に。", "created_at": "2026-10-30T09:00:00Z", "metrics": {"reply": 3, "repost": 12, "like": 822, "view": 2734}, "author": {"name": "喫茶ひなた", "username": "hinata_cafe", "avatar": "https://picsum.photos/seed/avatar2/600/400"}, "media": [{"type": "photo", "url": "https://picsum.photos/seed/5/600/400"}, {"type": "photo", "url": "https://picsum.photos/seed/6/600/400"}]}, {"id": "2000000000000000002", "text": "街で見つけた、小さな景色を3枚。\n#日常", "created_at": "2026-10-29T09:00:00Z", "metrics": {"reply": 6, "repost": 24, "like": 685, "view": 3968}, "author": {"name": "デザイン日記", "username": "design_note", "avatar": "https://picsum.photos/seed/avatar3/600/400"}, "media": [{"type": "photo", "url": "https://picsum.photos/seed/9/600/400"}, {"type": "photo", "url": "https://picsum.photos/seed/10/600/400"}, {"type": "photo", "url": "https://picsum.photos/seed/11/600/400"}]}, {"id": "2000000000000000003", "text": "季節の色を集めました。\nどの風景がお気に入りですか？ #旅", "created_at": "2026-10-28T09:00:00Z", "metrics": {"reply": 9, "repost": 36, "like": 548, "view": 5202}, "author": {"name": "旅するあお", "username": "ao_travel", "avatar": "https://picsum.photos/seed/avatar1/600/400"}, "media": [{"type": "photo", "url": "https://picsum.photos/seed/13/600/400"}, {"type": "photo", "url": "https://picsum.photos/seed/14/600/400"}, {"type": "photo", "url": "https://picsum.photos/seed/15/600/400"}, {"type": "photo", "url": "https://picsum.photos/seed/16/600/400"}]}, {"id": "2000000000000000004", "text": "波の音に癒される午後。動画でひと休み。 #海", "created_at": "2026-10-27T09:00:00Z", "metrics": {"reply": 12, "repost": 48, "like": 411, "view": 6436}, "author": {"name": "喫茶ひなた", "username": "hinata_cafe", "avatar": "https://picsum.photos/seed/avatar2/600/400"}, "media": [{"type": "video", "url": "https://picsum.photos/seed/17/600/400"}]}, {"id": "2000000000000000005", "text": "アイデアは、余白から。\n文字だけの投稿も大切に。 $DESIGN", "created_at": "2026-10-26T09:00:00Z", "metrics": {"reply": 15, "repost": 60, "like": 274, "view": 7670}, "author": {"name": "デザイン日記", "username": "design_note", "avatar": "https://picsum.photos/seed/avatar3/600/400"}, "media": []}, {"id": "2000000000000000006", "text": "今日のコーヒーと、読みかけの本。\n#喫茶店", "created_at": "2026-10-25T09:00:00Z", "metrics": {"reply": 18, "repost": 72, "like": 137, "view": 8904}, "author": {"name": "旅するあお", "username": "ao_travel", "avatar": "https://picsum.photos/seed/avatar1/600/400"}, "media": [{"type": "photo", "url": "https://picsum.photos/seed/25/600/400"}]}]};
+const $ = id => document.getElementById(id);
+const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeImage = value => {try {const u = new URL(value);return u.protocol === 'https:' && ['pbs.twimg.com','picsum.photos'].includes(u.hostname) ? escapeHTML(u.href) : '';}catch{return '';}};
+function richText(text) {
+  const pattern = /https?:\/\/[^\s<>]+|[#@＃＠$＄][\p{L}\p{N}_]+/gu;
+  let result = '', last = 0;
+  for (const match of String(text || '').matchAll(pattern)) {
+    result += escapeHTML(text.slice(last, match.index));
+    const token = match[0];
+    let href;
+    if (/^https?:/.test(token)) href = token;
+    else if (/^[@＠]/.test(token)) href = 'https://x.com/' + encodeURIComponent(token.slice(1));
+    else href = 'https://x.com/search?q=' + encodeURIComponent(token);
+    result += '<a target="_blank" rel="noopener noreferrer" href="' + escapeHTML(href) + '">' + escapeHTML(token) + '</a>';
+    last = match.index + token.length;
+  }
+  return result + escapeHTML(String(text || '').slice(last));
+}
+const paths = {reply:'M20 11a8 8 0 0 1-8 8H5l-3 3v-10a9 9 0 1 1 18-1Z',repost:'m4 8 4-4 4 4M8 4v12h12m0 0-4 4m4-4-4-4',like:'M12 21 3 12C-3 4 7-1 12 6c5-7 15-2 9 6Z',view:'M4 21V11m6 10V3m6 18V8m6 13V5'};
+let posts = [], sort = 'liked', featuredId = null;
+function card(post) {
+  const author = post.author || {}, media = (post.media || []).slice(0,4);
+  const date = new Date(post.created_at);
+  const label = Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat('ja-JP',{month:'long',day:'numeric'}).format(date);
+  const url = 'https://x.com/' + encodeURIComponent(author.username || 'i') + '/status/' + encodeURIComponent(post.id);
+  return '<article class="post" tabindex="0" role="link" data-url="' + escapeHTML(url) + '" aria-label="' + escapeHTML((author.name || '') + 'の投稿をXで開く') + '"><div class="post-head"><img class="avatar" src="' + safeImage(author.avatar) + '" alt="" loading="lazy"><div class="author"><div class="name">' + escapeHTML(author.name) + '</div><div class="byline">@' + escapeHTML(author.username) + ' · ' + escapeHTML(label) + '</div></div></div><div class="text">' + richText(post.text) + '</div>' + (media.length ? '<div class="media n' + media.length + '">' + media.map(m => '<div class="tile"><img src="' + safeImage(m.url) + '" alt="投稿のメディア" loading="lazy">' + (m.type !== 'photo' ? '<div class="play"><span aria-label="動画をXで再生">▶</span></div>' : '') + '</div>').join('') + '</div>' : '') + '<div class="footer">' + Object.entries(paths).map(([key,path]) => '<span class="metric" aria-label="' + ({reply:'返信',repost:'リポスト',like:'いいね',view:'表示'}[key]) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + path + '"/></svg>' + new Intl.NumberFormat('ja-JP',{notation:'compact'}).format(post.metrics?.[key] || 0) + '</span>').join('') + '</div></article>';
+}
+function shuffle() {
+ const candidates = posts.filter(p => p.media?.length && p.id !== featuredId);
+ const post = candidates[Math.floor(Math.random()*candidates.length)] || posts.find(p => p.media?.length);
+ featuredId = post?.id;
+ $('featured').innerHTML = post ? card(post) : '<p class="muted">メディア付きの投稿はありません。</p>';
+ $('shuffle').disabled = !post;
+}
+function render() {
+ const query = $('search').value.toLocaleLowerCase(), author = $('authors').value;
+ const filtered = posts.filter(p => (!author || p.author.username === author) && (p.text + ' ' + p.author.name + ' ' + p.author.username).toLocaleLowerCase().includes(query));
+ if(sort === 'new') filtered.sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+ if(sort === 'popular') filtered.sort((a,b) => (b.metrics.like || 0)-(a.metrics.like || 0));
+ $('stats').innerHTML = '<span>件数 <b>' + filtered.length + '</b></span><span>投稿者数 <b>' + new Set(filtered.map(p=>p.author.username)).size + '</b></span><span>画像付き <b>' + filtered.filter(p=>p.media?.some(m=>m.type==='photo')).length + '</b></span>';
+ $('posts').innerHTML = filtered.map(card).join('') || '<p class="status">該当する投稿はありません。</p>';
+}
+function start(data) {
+ posts = data.posts || [];
+ const user = data.user;
+ $('account').innerHTML = '<img src="' + safeImage(user.profile_image_url) + '" alt=""><span>@' + escapeHTML(user.username) + '</span>' + (window.__MOCK__ ? '<span>デモ</span>' : '<a href="/logout">ログアウト</a>');
+ const counts = new Map();posts.forEach(p=>counts.set(p.author.username,(counts.get(p.author.username)||0)+1));
+ $('authors').innerHTML = '<option value="">すべての投稿者</option>' + [...counts].map(([name,count])=>'<option value="'+escapeHTML(name)+'">@'+escapeHTML(name)+' ('+count+')</option>').join('');
+ $('status').hidden = true;$('app').hidden = false;shuffle();render();
+}
+document.addEventListener('click', event => {const post = event.target.closest('.post');if(post && !event.target.closest('a')) window.open(post.dataset.url,'_blank','noopener,noreferrer');});
+document.addEventListener('keydown', event => {if(event.target.matches('.post') && (event.key==='Enter'||event.key===' ')){event.preventDefault();window.open(event.target.dataset.url,'_blank','noopener,noreferrer');}});
+$('search').addEventListener('input',render);$('authors').addEventListener('change',render);$('shuffle').addEventListener('click',shuffle);
+document.querySelectorAll('[data-sort]').forEach(button=>button.addEventListener('click',()=>{sort=button.dataset.sort;document.querySelectorAll('[data-sort]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));render();}));
+async function init() {
+ if(window.__MOCK__) return start(window.__MOCK__);
+ if(window.__SETUP_REQUIRED__) {$('status').hidden=true;$('landing').hidden=false;$('intro').textContent='セットアップが必要です。X_CLIENT_ID、X_CLIENT_SECRET、SESSION_SECRET と KV を設定してください。';$('login').hidden=true;return;}
+ try {
+  const me = await fetch('/api/me');
+  if(me.status===401){$('status').hidden=true;$('landing').hidden=false;return;}
+  if(!me.ok) throw new Error('ユーザー情報を取得できませんでした。');
+  const response = await fetch('/api/likes');const data = await response.json();
+  if(!response.ok) throw new Error(data.error || 'いいねを取得できませんでした。');
+  start(data);
+ } catch(error) {$('status').textContent=error.message;}
+}
+init();
+</script></body></html>
