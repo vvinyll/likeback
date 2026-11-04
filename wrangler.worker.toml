@@ -1,0 +1,10 @@
+name = "likeback"
+main = "src/worker.js"
+compatibility_date = "2025-10-01"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "839c74b33ab8438e9c5c62cf2a31bb6e"
+
+[ai]
+binding = "AI"

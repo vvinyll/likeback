@@ -1,11 +1,21 @@
 # Likeback
 
-A self-contained Cloudflare Worker (`likeback`) with a Japanese frontend, 20 categories, month/category/author filters, search, shuffle, personal PNG cards, and responsive masonry (up to five columns). No build step or additional bindings are required.
+A self-contained Cloudflare Pages Advanced Mode app or Worker (`likeback`) with a Japanese frontend, 20 categories, month/category/author filters, search, shuffle, personal PNG cards, and responsive masonry (up to five columns). Pages uses a shell-only copy step; Worker deployments need no build step. Both use the same bindings.
 
 1. Enable OAuth 2.0 for a confidential Web App in the X developer portal. Register `https://likeback.kzyxyz16.workers.dev/callback` and the Worker origin `https://likeback.kzyxyz16.workers.dev` (or your deployed origin). OAuth callback URLs are derived from `new URL(request.url).origin`; shared links use the current page origin. Request `tweet.read users.read like.read offline.access` and access to liked tweets.
-2. Run `wrangler kv namespace create SESSIONS`. Replace the existing example namespace `id` in `wrangler.toml` with your own ID. The checked-in ID is an example value, not a usable placeholder or secret.
-3. Configure `X_CLIENT_ID`, `X_CLIENT_SECRET`, and `SESSION_SECRET` using `wrangler secret put <NAME>`. Generate a long random session secret, for example with `openssl rand -hex 32`. Use OAuth 2.0 credentials, not OAuth 1.0 API keys. Keep the existing `SESSIONS` KV and `AI` bindings.
-4. Run `node --check src/worker.js`, preview with `wrangler dev`, then deploy with `wrangler deploy`. OAuth needs HTTPS because cookies are Secure.
+2. Run `wrangler kv namespace create SESSIONS --config wrangler.worker.toml`. Replace the existing example namespace `id` in both `wrangler.toml` and `wrangler.worker.toml` with your own ID. The checked-in ID is an example value, not a usable placeholder or secret.
+3. Configure `X_CLIENT_ID`, `X_CLIENT_SECRET`, and `SESSION_SECRET` using `wrangler secret put <NAME> --config wrangler.worker.toml`. Generate a long random session secret, for example with `openssl rand -hex 32`. Use OAuth 2.0 credentials, not OAuth 1.0 API keys. Keep the existing `SESSIONS` KV and `AI` bindings.
+4. Run `node --check src/worker.js`, preview with `wrangler dev --config wrangler.worker.toml`, then deploy with `wrangler deploy --config wrangler.worker.toml`. OAuth needs HTTPS because cookies are Secure.
+
+To deploy on Cloudflare Pages:
+
+1. Create a Pages project named `likeback`. For Git integration, select no framework, set the build command to `sh scripts/build-pages.sh`, and set the build output directory to `public`.
+2. For a direct upload using an installed Wrangler CLI, run `sh scripts/build-pages.sh`, then `wrangler pages project create likeback` (once) and `wrangler pages deploy public --project-name likeback`. The build needs no npm or dependencies; it copies `src/worker.js` to the ignored `public/_worker.js`, which handles all routes in Advanced Mode.
+3. In the Pages project's settings, add encrypted secrets `X_CLIENT_ID`, `X_CLIENT_SECRET`, and `SESSION_SECRET` for production and any previews you use, then redeploy. `wrangler.toml` supplies the `SESSIONS` KV and `AI` bindings; keep their values aligned with `wrangler.worker.toml` when changing them.
+4. Register the deployed Pages origin (for example, `https://likeback.pages.dev`) and its exact `/callback` URL in the X developer portal. Register custom domains or preview origins separately if used. Callback URLs and POST origin checks derive from the request URL, and shared links use the current page origin.
+5. Check with `node --check src/worker.js` and `node --check public/_worker.js`. Preview locally with `wrangler pages dev public`; OAuth requires an HTTPS origin registered with X.
+
+`wrangler.toml` is the Pages configuration; `wrangler.worker.toml` retains the Worker entry point and the same name, KV namespace ID, and AI binding. See Cloudflare's [Pages configuration](https://developers.cloudflare.com/pages/functions/wrangler-configuration/) and [Advanced Mode](https://developers.cloudflare.com/pages/functions/advanced-mode/) documentation.
 
 `/login` performs no KV writes. PKCE verifier, state, and a ten-minute expiry live in an HMAC-signed HttpOnly Secure SameSite=Lax cookie, checked and cleared by the callback. Access tokens are checked before fetching the user. Login failures redirect to the landing page with a message; a successful re-login deletes the old session. Tokens remain in KV. Sessions have a server-checked absolute 30-day lifetime. Refresh begins five minutes before token expiry. X 400/401 during refresh or likes retrieval deletes the session, expires the cookie, and returns JSON 401; any frontend API 401 returns to login. Logout requires POST and a matching Origin.
 

@@ -5,3 +5,5 @@ node_modules/
 codex.log
 *.log
 *.bak*
+
+public/_worker.js
